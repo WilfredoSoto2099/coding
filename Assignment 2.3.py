@@ -1,4 +1,4 @@
-# Furniture.py - This program calculates profits and sales prices for a furniture company.
+
 
 itemName = "TV Stand"
 retailPrice = 325.00
