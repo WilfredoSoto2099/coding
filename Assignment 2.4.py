@@ -14,7 +14,7 @@ totalWithholding = statetax + federaltax + dependentdeduction
 takeHomePay = salary - totalWithholding
 
 # output statements
-print('State Tax:' + str(statetax))
+print('StateTax:' + str(statetax))
 print('Federal Tax:' + str(federaltax))
 print('Dependents:' + str(dependentdeduction))
 print("Salary: $" + str(salary))
