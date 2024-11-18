@@ -3,7 +3,7 @@
 month = int(input('Please insert a month: '))
 day = int(input('Please insert a day: '))
 year = int(input('Please insert a year: '))
-# Output:       Valid date is printed or user is alerted that an invalid date was entered.
+# Output: Valid date 
 validDate = True
 MIN_YEAR = 0
 MIN_MONTH = 1
