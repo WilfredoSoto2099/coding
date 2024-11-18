@@ -10,9 +10,9 @@ productivy_score = userinputvalue / userinputtrans / userinputshift
 #if statement 
 if productivy_score <= 30:
     bonus = 50
-if productivy_score > 31 < 69:
+if productivy_score >= 31 < 69:
     bonus = 75
-if productivy_score > 70 < 199:
+if productivy_score >= 70 < 199:
     bonus = 100
 if productivy_score >= 200:
     bonus = 200
