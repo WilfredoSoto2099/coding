@@ -1,5 +1,6 @@
-import time
+import time #time delay module
 
+#Header
 def display_header():
     header = '********************************\n'
     header += 'AutoCountry Vehicle Finder 0.1\n'
@@ -10,6 +11,7 @@ def display_header():
     header += '2. Exit\n'
     print(header)
 
+#List of authorized vehicles 
 authorized_vehicles = [
     "Ford F-150",
     "Chevrolet Silverado",
@@ -17,28 +19,28 @@ authorized_vehicles = [
     "Toyota Tundra",
     "Nissan Titan"
 ]
-
+#Module to define user input
 def handle_user_choice():
     while True:
         try:
-            choice = int(input('Enter your choice (1 or 2): '))
+            choice = int(input('Enter your choice (1 or 2): ')) #choices
             if choice == 1:
-                print('Printing all Authorized Vehicles...')
-                time.sleep(2)
-                print ()
-                for vehicle in authorized_vehicles:
-                    print(f'*{vehicle}')
-                    time.sleep(1)
-                    print()
-                time.sleep(5)
-                display_header()
-            elif choice == 2:
+                print('Printing all Authorized Vehicles...') #prints vehicle
+                time.sleep(2) #delay
+                print () #adds a space
+                for vehicle in authorized_vehicles: #pulls up authorized vehicle menu
+                    print(f'*{vehicle}') #prints what's inside
+                    time.sleep(1) # delay between inputs
+                    print() # space between input
+                time.sleep(5) #delay
+                display_header() #display header again / repeats
+            elif choice == 2: #ends program
                 print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')
-                break
+                break #end loop
             else:
-                print('Invalid choice. Please enter 1 or 2.')
+                print('Invalid choice. Please enter 1 or 2.') #wrong choice
         except ValueError:
-            print('Invalid input. Please enter a valid number.')
+            print('Invalid input. Please enter a valid number.') #prints answer for wrong choice
 
 # Display the header once
 display_header()
