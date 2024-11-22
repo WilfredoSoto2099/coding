@@ -1,17 +1,17 @@
-import time #time delay module
+import time
 
-#Header
 def display_header():
+    time.sleep(2)
     header = '********************************\n'
     header += 'AutoCountry Vehicle Finder 0.1\n'
     header += "********************************\n"
     header += 'Please Enter the following number below from the following menu\n'
     header += '\n'
-    header += '1. Print all Authorized Vehicles\n'
-    header += '2. Exit\n'
+    header += '1. PRINT all Authorized Vehicles\n'
+    header += '2. SEARCH for Authorized Vehicle\n'
+    header += '3. Exit\n'
     print(header)
 
-#List of authorized vehicles 
 authorized_vehicles = [
     "Ford F-150",
     "Chevrolet Silverado",
@@ -19,31 +19,33 @@ authorized_vehicles = [
     "Toyota Tundra",
     "Nissan Titan"
 ]
-#Module to define user input
+
 def handle_user_choice():
     while True:
+        display_header()
         try:
-            choice = int(input('Enter your choice (1 or 2): ')) #choices
+            choice = int(input('Enter your choice (1, 2 or 3): '))
             if choice == 1:
-                print('Printing all Authorized Vehicles...') #prints vehicle
-                time.sleep(2) #delay
-                print () #adds a space
-                for vehicle in authorized_vehicles: #pulls up authorized vehicle menu
-                    print(f'*{vehicle}') #prints what's inside
-                    time.sleep(1) # delay between inputs
-                    print() # space between input
-                time.sleep(5) #delay
-                display_header() #display header again / repeats
-            elif choice == 2: #ends program
+                print('Printing all Authorized Vehicles...')
+                time.sleep(2)
+                for vehicle in authorized_vehicles:
+                    print() # Adds a new line for better readability
+                    time.sleep(1)
+                    print(vehicle)
+            elif choice == 2:
+                uservehicle = input('Please Enter the full vehicle name:').strip().lower()
+                if uservehicle in [vehicle.lower() for vehicle in authorized_vehicles]:
+                    time.sleep(1)
+                    print(f'{uservehicle} is an authorized vehicle')
+                else:
+                    time.sleep(1)
+                    print(f'{uservehicle} is not an authorized vehicle. If you received this in error, please check the spelling and try again...')
+                time.sleep(1)
+            if choice == 3:
                 print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')
-                break #end loop
-            else:
-                print('Invalid choice. Please enter 1 or 2.') #wrong choice
+                break  # Exit the loop and end the program
         except ValueError:
-            print('Invalid input. Please enter a valid number.') #prints answer for wrong choice
+            print('Invalid input. Please enter a valid number.')
 
-# Display the header once
-display_header()
-
-# Handle the user choice
+# Start the user choice handling loop
 handle_user_choice()
