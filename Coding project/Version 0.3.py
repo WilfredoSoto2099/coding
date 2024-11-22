@@ -25,49 +25,53 @@ def handle_user_choice():
     while True:
         display_header()
         try:
-            time.sleep(2)
-            choice = int(input('Enter your choice (1, 2, 3, or 4): '))
-            if choice == 1:
-                print()
-                print('Printing all Authorized Vehicles...')
-                time.sleep(2)
+            time.sleep(2) #readability
+            choice = int(input('Enter your choice (1, 2, 3, or 4): ')) #user inp
+         #first choice
+            if choice == 1: 
+                print() #readability
+                print('Printing all Authorized Vehicles...') #readability/answer
+                time.sleep(2) #readability
                 for vehicle in authorized_vehicles:
                     print()  # Adds a new line for better readability
-                    time.sleep(1)
-                    print(vehicle)
-                print()
+                    time.sleep(1) #read
+                    print(vehicle) #print dictonary
+                print() #readability
+        #second choice
             elif choice == 2:
-                uservehicle = input('Please Enter the full vehicle name:').strip().lower()
+                uservehicle = input('Please Enter the full vehicle name:').strip().lower() #user inp
                 if uservehicle in [vehicle.lower() for vehicle in authorized_vehicles]:
-                    time.sleep(1)
-                    print(f'{uservehicle} is an authorized vehicle')
+                    time.sleep(1) #readability
+                    print(f'{uservehicle} is an authorized vehicle') #answer
                 else:
-                    time.sleep(1)
-                    print(f'{uservehicle} is not an authorized vehicle. If you received this in error, please check the spelling and try again...')
-                print()
+                    time.sleep(1) #readability
+                    print(f'{uservehicle} is not an authorized vehicle. If you received this in error, please check the spelling and try again...') #answer
+                print() #readability
             elif choice == 3:
-                addvehicle = input('Please insert the vehicle name you would like to add: ').strip()
-                authorized_vehicles.append(addvehicle)
-                time.sleep(1)
-                print('Loading...')
-                time.sleep(3)
-                print(f'{addvehicle} has been added to the Authorized Vehicle list.')
-                print()
+        #third choice
+                addvehicle = input('Please insert the vehicle name you would like to add: ').strip() #user inp
+                authorized_vehicles.append(addvehicle) #add userinput to dictonary 
+                time.sleep(1) #readability
+                print('Loading...') #readability/answer
+                time.sleep(3) #readability
+                print(f'{addvehicle} has been added to the Authorized Vehicle list.') #answer
+                print() #readability
             elif choice == 4:
-                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')
+        #fourth choice
+                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!') #end 
                 break  # Exit the loop and end the program
             else:
-                print('Invalid choice. Please enter 1, 2, 3, or 4.')
-                print()
-            time.sleep(2)
-            continue_choice = input('Would you like to continue? (yes/no): ').strip().lower()
-            if continue_choice == 'Yes'.lower():
-                print('Loading...')
-                time.sleep(3)
+                print('Invalid choice. Please enter 1, 2, 3, or 4.') #answer
+                print() #readability
+            time.sleep(2) #readability
+            continue_choice = input('Would you like to continue? (yes/no): ').strip().lower() #userinp
+            if continue_choice == 'Yes'.lower(): #no case sensitive
+                print('Loading...') #answer
+                time.sleep(3) #readability
                 continue  # Restart the loop
             else:
-                time.sleep(1)
-                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')
+                time.sleep(1) #readability
+                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!') #end 
                 break  # Exit the loop and end the program
         except ValueError:
             time.sleep(1)
