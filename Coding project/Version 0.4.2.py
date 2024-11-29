@@ -1,4 +1,6 @@
 import time
+import json
+import os
 
 def display_header():
     print()
@@ -12,102 +14,100 @@ def display_header():
     header += '3. Add a Vehicle to the Authorized List\n'
     header += '4. Remove a Vehicle from the Authorized list\n'
     header += '5. Exit\n'
-    time.sleep(1)
     print(header)
 
-#list of authorized vehicles 
-authorized_vehicles = [ 
-    "FORD F-150",
-    "CHEVORLET SILVERADO",
-    "TESLA CYBERTRUCK",
-    "TOYOTA TUNDRA",
-    "NISSAN TITAN"
-]
+def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:\coding\Coding project'):
+    filepath = os.path.join(directory, filename)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    print(f"Loading from: {filepath}")  # Debugging: Print the file path being loaded
+    try:
+        with open(filepath, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return []
+
+def save_authorized_vehicles(authorized_vehicles, filename='authorized_vehicles.json', directory=r'C:\coding\Coding project'):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    authorized_vehicles.sort()  # Sort the list alphabetically before saving
+    filepath = os.path.join(directory, filename)
+    print(f"Saving to: {filepath}")  # Debugging: Print the file path being saved
+    with open(filepath, 'w') as file:
+        json.dump(authorized_vehicles, file, indent=4)
 
 def handle_user_choice():
+    authorized_vehicles = load_authorized_vehicles()
+    
     while True:
         display_header()
         try:
-            time.sleep(1) # readability
-            choice = int(input('Enter your choice (1, 2, 3, 4, or 5): ')) # user input
+            time.sleep(2)  # readability
+            choice = int(input('Enter your choice (1, 2, 3, 4, or 5): '))  # user input
             # first choice
-            if choice == 1: 
-                print() # readability
-                print('Printing all Authorized Vehicles...') # readability/answer
-                time.sleep(2) # readability
+            if choice == 1:
+                print()  # readability
+                print('Printing all Authorized Vehicles...')  # readability/answer
+                time.sleep(2)  # readability
                 for vehicle in authorized_vehicles:
                     print()  # Adds a new line for better readability
-                    time.sleep(1) # readability
-                    print(vehicle) # print dictionary
-                print() # readability
+                    time.sleep(1)  # readability
+                    print(vehicle)  # print list
+                print()  # readability
             # second choice
             elif choice == 2:
-                user_vehicle = input('Please Enter the full vehicle name: ').strip().lower() # user input
-                if user_vehicle in [vehicle.lower() for vehicle in authorized_vehicles]:
-                    time.sleep(1) # readability
-                    print(f'{user_vehicle} is an authorized vehicle') # answer
+                user_vehicle = input('Please Enter the full vehicle name: ').strip().upper()  # user input
+                if user_vehicle in [vehicle.upper() for vehicle in authorized_vehicles]:
+                    time.sleep(1)  # readability
+                    print(f'{user_vehicle} is an authorized vehicle')  # answer
                 else:
-                    time.sleep(1) # readability
-                    print(f'{user_vehicle} is not an authorized vehicle. If you received this in error, please check the spelling and try again...') # answer
-                print() # readability
+                    time.sleep(1)  # readability
+                    print(f'{user_vehicle} is not an authorized vehicle. If you received this in error, please check the spelling and try again...')  # answer
+                print()  # readability
             # third choice
             elif choice == 3:
-                add_vehicle = input('Please insert the vehicle name you would like to add: ').upper() # user input
-                authorized_vehicles.append(add_vehicle) # add user input to dictionary 
-                time.sleep(1) # readability
-                print('Loading...') # readability/answer
-                time.sleep(3) # readability
-                print(f'{add_vehicle} has been added to the Authorized Vehicle list.') # answer
-                print() # readability
+                add_vehicle = input('Please insert the vehicle name you would like to add: ').strip().upper()  # user input
+                authorized_vehicles.append(add_vehicle)  # add user input to list
+                save_authorized_vehicles(authorized_vehicles)  # save changes
+                time.sleep(1)  # readability
+                print('Loading...')  # readability/answer
+                time.sleep(3)  # readability
+                print(f'{add_vehicle} has been added to the Authorized Vehicle list.')  # answer
+                print()  # readability
             # fourth choice
             elif choice == 4:
-                remove_vehicle = input('Please insert the vehicle name you would like to remove: ').upper()
+                remove_vehicle = input('Please insert the vehicle name you would like to remove: ').strip().upper()
                 if remove_vehicle in authorized_vehicles:
-                    authorized_vehicles.remove(remove_vehicle) # remove user input from dictionary
-                    time.sleep(1) #readabiltiy
-                    print('Loading...') #readability
-                    time.sleep(3) #readability
-                    continue_choice = input(f'Are you sure you want to remove {remove_vehicle} from the Authorized Vehicles List?').strip() #user input
-                    if continue_choice == 'yes': #loop for choice
-                        print('Loading...') #readability
-                        time.sleep(2)
-                        print(f'{remove_vehicle} HAS been removed from the Authorized Vehicle list.') #answer
-                        print() #readability
+                    confirmation = input(f'Are you sure you want to remove {remove_vehicle} from the Authorized Vehicles List? (yes/no): ').strip().lower()
+                    if confirmation == 'yes':
+                        authorized_vehicles.remove(remove_vehicle)  # remove user input from list
+                        save_authorized_vehicles(authorized_vehicles)  # save changes
+                        time.sleep(1)
+                        print('Loading...')
+                        time.sleep(3)
+                        print(f'{remove_vehicle} has been removed from the Authorized Vehicle list.')
+                        print()
                     else:
-                        print() #readability
-                        time.sleep(1) #readability
-                        print(f'{remove_vehicle} has NOT been removed from the Authorized Vehicles list') #answer
-                        continue  #continues the loop
+                        print(f'Removal of {remove_vehicle} canceled.')
                 else:
-                    time.sleep(1) #readability
-                    print('Loading...') #readability
-                    time.sleep(1) #readability
-                    print(f'{remove_vehicle} was not found in the list of authorized vehicles.') #answer
-                    print() #readability
-                    time.sleep(2) #readabiltiy
+                    print(f'{remove_vehicle} was not found in the list of authorized vehicles.')
+                    time.sleep(2)
             # fifth choice
             elif choice == 5:
-                time.sleep(1) # readabiltiy
-                print() #readability
-                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!') # end 
-                print() #readability
+                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')  # end
                 break  # Exit the loop and end the program
             else:
-                print('Invalid choice. Please enter 1, 2, 3, or 4.') # answer
-                print() # readability
-            time.sleep(2) # readability
-            continue_choice = input('Would you like to continue? (yes/no): ').strip().lower() # user input
-            if continue_choice == 'yes': # no case sensitive
-                print('Loading...') # answer
-                print()
-                print()
-                time.sleep(3) # readability
+                print('Invalid choice. Please enter 1, 2, 3, or 4.')  # answer
+                print()  # readability
+            time.sleep(2)  # readability
+            continue_choice = input('Would you like to continue? (yes/no): ').strip().lower()  # user input
+            if continue_choice == 'yes':  # no case sensitive
+                print('Loading...')  # answer
+                time.sleep(3)  # readability
                 continue  # Restart the loop
             else:
-                time.sleep(1) # readability
-                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!') # end 
-                print()
-                print()
+                time.sleep(1)  # readability
+                print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')  # end
                 break  # Exit the loop and end the program
         except ValueError:
             time.sleep(1)
