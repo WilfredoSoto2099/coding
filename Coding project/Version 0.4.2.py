@@ -16,11 +16,11 @@ def display_header():
     print(header)
 
 authorized_vehicles = [
-    "Ford F-150",
-    "Chevrolet Silverado",
-    "Tesla CyberTruck",
-    "Toyota Tundra",
-    "Nissan Titan"
+    "FORD F-150",
+    "CHEVORLET SILVERADO",
+    "TESLA CYBERTRUCK",
+    "TOYOTA TUNDRA",
+    "NISSAN TITAN"
 ]
 
 def handle_user_choice():
@@ -51,7 +51,7 @@ def handle_user_choice():
                 print() # readability
             # third choice
             elif choice == 3:
-                add_vehicle = input('Please insert the vehicle name you would like to add: ').strip() # user input
+                add_vehicle = input('Please insert the vehicle name you would like to add: ').upper() # user input
                 authorized_vehicles.append(add_vehicle) # add user input to dictionary 
                 time.sleep(1) # readability
                 print('Loading...') # readability/answer
@@ -60,15 +60,27 @@ def handle_user_choice():
                 print() # readability
             # fourth choice
             elif choice == 4:
-                remove_vehicle = input('Please insert the vehicle name you would like to remove: ').strip()
+                remove_vehicle = input('Please insert the vehicle name you would like to remove: ').upper()
                 if remove_vehicle in authorized_vehicles:
                     authorized_vehicles.remove(remove_vehicle) # remove user input from dictionary
                     time.sleep(1)
                     print('Loading...')
                     time.sleep(3)
-                    print(f'{remove_vehicle} has been removed from the Authorized Vehicle list.')
-                    print()
+                    continue_choice = input(f'Are you sure you want to remove {remove_vehicle} from the Authorized Vehicles List?').strip() #user input
+                    if continue_choice == 'yes': #loop for choice
+                        print('Loading...') #readability
+                        time.sleep(2)
+                        print(f'{remove_vehicle} HAS been removed from the Authorized Vehicle list.') #answer
+                        print() #readability
+                    else:
+                        print() #readability
+                        time.sleep(1) #readability
+                        print(f'{remove_vehicle} has NOT been removed from the Authorized Vehicles list') #answer
+                        continue  #continues the loop
                 else:
+                    time.sleep(1)
+                    print('Loading...')
+                    time.sleep(1)
                     print(f'{remove_vehicle} was not found in the list of authorized vehicles.')
                     print()
                     time.sleep(2)
