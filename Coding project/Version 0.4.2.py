@@ -15,7 +15,8 @@ def display_header():
     time.sleep(1)
     print(header)
 
-authorized_vehicles = [
+#list of authorized vehicles 
+authorized_vehicles = [ 
     "FORD F-150",
     "CHEVORLET SILVERADO",
     "TESLA CYBERTRUCK",
@@ -63,9 +64,9 @@ def handle_user_choice():
                 remove_vehicle = input('Please insert the vehicle name you would like to remove: ').upper()
                 if remove_vehicle in authorized_vehicles:
                     authorized_vehicles.remove(remove_vehicle) # remove user input from dictionary
-                    time.sleep(1)
-                    print('Loading...')
-                    time.sleep(3)
+                    time.sleep(1) #readabiltiy
+                    print('Loading...') #readability
+                    time.sleep(3) #readability
                     continue_choice = input(f'Are you sure you want to remove {remove_vehicle} from the Authorized Vehicles List?').strip() #user input
                     if continue_choice == 'yes': #loop for choice
                         print('Loading...') #readability
@@ -78,18 +79,18 @@ def handle_user_choice():
                         print(f'{remove_vehicle} has NOT been removed from the Authorized Vehicles list') #answer
                         continue  #continues the loop
                 else:
-                    time.sleep(1)
-                    print('Loading...')
-                    time.sleep(1)
-                    print(f'{remove_vehicle} was not found in the list of authorized vehicles.')
-                    print()
-                    time.sleep(2)
+                    time.sleep(1) #readability
+                    print('Loading...') #readability
+                    time.sleep(1) #readability
+                    print(f'{remove_vehicle} was not found in the list of authorized vehicles.') #answer
+                    print() #readability
+                    time.sleep(2) #readabiltiy
             # fifth choice
             elif choice == 5:
-                time.sleep(1)
-                print()
+                time.sleep(1) # readabiltiy
+                print() #readability
                 print('Thank you for using the AutoCountry Vehicle Finder, good-bye!') # end 
-                print()
+                print() #readability
                 break  # Exit the loop and end the program
             else:
                 print('Invalid choice. Please enter 1, 2, 3, or 4.') # answer
