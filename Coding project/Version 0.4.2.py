@@ -66,11 +66,14 @@ def handle_user_choice():
                 print()  # readability
             # third choice
             elif choice == 3:
+                print()
                 add_vehicle = input('Please insert the vehicle name you would like to add: ').strip().upper()  # user input
                 authorized_vehicles.append(add_vehicle)  # add user input to list
                 save_authorized_vehicles(authorized_vehicles)  # save changes
                 time.sleep(1)  # readability
+                print() #readability
                 print('Loading...')  # readability/answer
+                print() #readability
                 time.sleep(3)  # readability
                 print(f'{add_vehicle} has been added to the Authorized Vehicle list.')  # answer
                 print()  # readability
@@ -107,6 +110,7 @@ def handle_user_choice():
                 continue  # Restart the loop
             else:
                 time.sleep(1)  # readability
+                print() #readability
                 print('Thank you for using the AutoCountry Vehicle Finder, good-bye!')  # end
                 break  # Exit the loop and end the program
         except ValueError:
