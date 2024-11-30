@@ -7,7 +7,6 @@ def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:
     filepath = os.path.join(directory, filename)
     if not os.path.exists(directory):
         os.makedirs(directory)
-    print(f"Loading from: {filepath}")
     try:
         with open(filepath, 'r') as file:
             return json.load(file)
@@ -19,7 +18,6 @@ def save_authorized_vehicles(authorized_vehicles, filename='authorized_vehicles.
         os.makedirs(directory)
     authorized_vehicles.sort()
     filepath = os.path.join(directory, filename)
-    print(f"Saving to: {filepath}")
     with open(filepath, 'w') as file:
         json.dump(authorized_vehicles, file, indent=4)
 
@@ -28,35 +26,19 @@ def print_authorized_vehicles():
     output_text.delete(1.0, tk.END)
     output_text.insert(tk.END, 'Printing all Authorized Vehicles...\n')
     root.update()
-    time.sleep(2)
-    for vehicle in vehicles:
-        output_text.insert(tk.END, f'{vehicle}\n')
-    wait_for_user_input()
-    output_text.delete(1.0, tk.END)
+    display_vehicles_slowly(vehicles, 0)
 
 def check_authorized_vehicle():
     vehicles = load_authorized_vehicles()
-    time.sleep(1)
+    display_vehicles_slowly(vehicles, 0)
 
-    def check_vehicle():
-        user_vehicle = input_field.get().strip().upper()
-        output_text.delete(1.0, tk.END)
-        output_text.insert(tk.END, 'Checking authorization...\n')
+def display_vehicles_slowly(vehicles, index):
+    if index < len(vehicles):
+        vehicle = vehicles[index]
+        output_text.insert(tk.END, f"{vehicle}\n")
         root.update()
-        time.sleep(2)
-        if user_vehicle in [vehicle.upper() for vehicle in vehicles]:
-            output_text.insert(tk.END, f'{user_vehicle} is an authorized vehicle.\n')
-        else:
-            output_text.insert(tk.END, f'{user_vehicle} is not an authorized vehicle. Please check the spelling and try again.\n')
-        input_field.delete(0, tk.END)
-        root.after(4000, clear_output)  # Automatically clear log after 4 seconds
-        submit_button.pack_forget()
-
-    input_field.delete(0, tk.END)
-    time.sleep(1)
-    output_text.insert(tk.END, "Please insert vehicle name")
-    submit_button.config(command=check_vehicle)
-    submit_button.pack(pady=10)
+        # Repeat function after 1 second (1000 milliseconds)
+        root.after(1000, lambda: display_vehicles_slowly(vehicles, index + 1))
 
 def add_authorized_vehicle():
     vehicles = load_authorized_vehicles()
@@ -70,6 +52,7 @@ def add_authorized_vehicle():
         vehicles.append(new_vehicle)
         save_authorized_vehicles(vehicles)
         output_text.insert(tk.END, f'{new_vehicle} has been added to the Authorized Vehicle list.\n')
+        input_field.delete(0, tk.END)
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
         submit_button.pack_forget()
@@ -94,6 +77,7 @@ def remove_authorized_vehicle():
             output_text.insert(tk.END, f'{vehicle_to_remove} has been removed from the Authorized Vehicle list.\n')
         else:
             output_text.insert(tk.END, f'{vehicle_to_remove} was not found in the list of authorized vehicles.\n')
+        input_field.delete(0, tk.END)
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
         submit_button.pack_forget()
