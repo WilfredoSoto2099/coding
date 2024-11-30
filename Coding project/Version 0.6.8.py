@@ -3,6 +3,9 @@ import time
 import json
 import os
 
+# Global variable to store the ID of the scheduled after call
+display_vehicles_slowly_after = None
+
 # Load authorized vehicles from file
 def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:\coding\Coding project'):
     filepath = os.path.join(directory, filename)
@@ -44,7 +47,10 @@ def show_continue_button():
 
 # Cancel any ongoing processes, clear the output text area, and remove the "Continue" button
 def handle_continue():
-    root.after_cancel(display_vehicles_slowly_after)
+    global display_vehicles_slowly_after
+    if display_vehicles_slowly_after:
+        root.after_cancel(display_vehicles_slowly_after)
+        display_vehicles_slowly_after = None
     clear_output()
     continue_button.pack_forget()
 
@@ -62,7 +68,7 @@ def print_authorized_vehicles():
     output_text.insert(tk.END, 'Printing all Authorized Vehicles...\n')
     root.update()
     display_vehicles_slowly(vehicles, 0)
-    root.after(1000, show_continue_button)
+    root.after(10000, show_continue_button)
 
 # OPTION 2: Check if a vehicle is authorized
 def check_authorized_vehicle():
@@ -71,20 +77,24 @@ def check_authorized_vehicle():
     def check_vehicle():
         user_vehicle = input_field.get().strip().upper()
         output_text.delete(1.0, tk.END)
-        output_text.insert(tk.END, 'Checking authorization...\n')
-        root.update()
-        time.sleep(2)
-        if user_vehicle in [vehicle.upper() for vehicle in vehicles]:
-            output_text.insert(tk.END, f'{user_vehicle} is an authorized vehicle.\n')
+        
+        if user_vehicle:  # Check if user_vehicle is not empty
+            output_text.insert(tk.END, 'Checking authorization...\n')
+            root.update()
+            time.sleep(2)
+            if user_vehicle in [vehicle.upper() for vehicle in vehicles]:
+                output_text.insert(tk.END, f'{user_vehicle} is an authorized vehicle.\n')
+            else:
+                output_text.insert(tk.END, f'{user_vehicle} is not an authorized vehicle. Please check the spelling and try again.\n')
         else:
-            output_text.insert(tk.END, f'{user_vehicle} is not an authorized vehicle. Please check the spelling and try again.\n')
+            output_text.insert(tk.END, 'Please insert vehicle name...\n')
+
         input_field.delete(0, tk.END)
         wait_for_user_input()  # Wait for user input with a "Continue" button
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    time.sleep(1)
-    output_text.insert(tk.END, 'Please insert vehicle name...')
+    input_field.insert(0, 'Enter vehicle name...')
     submit_button.config(command=check_vehicle)
     submit_button.pack(pady=10)
 
