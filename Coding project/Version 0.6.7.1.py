@@ -3,6 +3,7 @@ import time
 import json
 import os
 
+# Load authorized vehicles from file
 def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:\coding\Coding project'):
     filepath = os.path.join(directory, filename)
     if not os.path.exists(directory):
@@ -13,6 +14,7 @@ def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:
     except FileNotFoundError:
         return []
 
+# Save authorized vehicles to file
 def save_authorized_vehicles(authorized_vehicles, filename='authorized_vehicles.json', directory=r'C:\coding\Coding project'):
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -21,6 +23,35 @@ def save_authorized_vehicles(authorized_vehicles, filename='authorized_vehicles.
     with open(filepath, 'w') as file:
         json.dump(authorized_vehicles, file, indent=4)
 
+# Helper function to display vehicles one by one with a delay
+def display_vehicles_slowly(vehicles, index):
+    global display_vehicles_slowly_after
+    if index < len(vehicles):
+        vehicle = vehicles[index]
+        output_text.insert(tk.END, f"{vehicle}\n")
+        root.update()
+        display_vehicles_slowly_after = root.after(1000, lambda: display_vehicles_slowly(vehicles, index + 1))
+
+# Clear the output text area
+def clear_output():
+    output_text.delete(1.0, tk.END)
+
+# Show the "Continue" button
+def show_continue_button():
+    continue_button = tk.Button(root, text="Continue", command=handle_continue)
+    continue_button.pack(pady=10)
+
+# Cancel any ongoing processes and clear the output text area
+def handle_continue():
+    root.after_cancel(display_vehicles_slowly_after)
+    clear_output()
+
+# Wait for user input with a "Continue" button
+def wait_for_user_input():
+    continue_button = tk.Button(root, text="Continue", command=lambda: [continue_button.pack_forget(), clear_output()])
+    continue_button.pack(pady=10)
+    root.wait_window(continue_button)
+
 # OPTION 1: Print all authorized vehicles
 def print_authorized_vehicles():
     vehicles = load_authorized_vehicles()
@@ -28,9 +59,8 @@ def print_authorized_vehicles():
     output_text.insert(tk.END, 'Printing all Authorized Vehicles...\n')
     root.update()
     display_vehicles_slowly(vehicles, 0)
-    # contine button
-    wait_for_user_input()
-    
+    root.after(10000, show_continue_button)
+
 # OPTION 2: Check if a vehicle is authorized
 def check_authorized_vehicle():
     vehicles = load_authorized_vehicles()
@@ -50,16 +80,9 @@ def check_authorized_vehicle():
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    output_text.insert(tk.END, 'Please insert vehicle name')
+    input_field.insert(0, 'Enter vehicle name...')
     submit_button.config(command=check_vehicle)
     submit_button.pack(pady=10)
-
-def display_vehicles_slowly(vehicles, index):
-    if index < len(vehicles):
-        vehicle = vehicles[index]
-        output_text.insert(tk.END, f"{vehicle}\n")
-        root.update()
-        root.after(1000, lambda: display_vehicles_slowly(vehicles, index + 1))
 
 # OPTION 3: Add a vehicle to the authorized list
 def add_authorized_vehicle():
@@ -110,24 +133,13 @@ def remove_authorized_vehicle():
     submit_button.config(command=remove_vehicle)
     submit_button.pack(pady=10)
 
-def clear_output():
-    output_text.delete(1.0, tk.END)
-    
-
-def wait_for_user_input():
-    continue_button = tk.Button(root, text="Continue", command=lambda: {continue_button.pack_forget(), clear_output()})
-    continue_button.pack(pady=10)
-    root.wait_window(continue_button)
-
-
+# OPTION 5: Exit the program
 def exit_program():
     output_text.delete(1.0, tk.END)
     output_text.insert(tk.END, 'Exiting program...\n')
     root.update()
     time.sleep(2)
     root.destroy()
-
-
 
 # Setting up the GUI
 root = tk.Tk()
