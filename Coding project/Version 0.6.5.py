@@ -36,6 +36,7 @@ def print_authorized_vehicles():
 
 def check_authorized_vehicle():
     vehicles = load_authorized_vehicles()
+    time.sleep(1)
 
     def check_vehicle():
         user_vehicle = input_field.get().strip().upper()
@@ -47,11 +48,14 @@ def check_authorized_vehicle():
             output_text.insert(tk.END, f'{user_vehicle} is an authorized vehicle.\n')
         else:
             output_text.insert(tk.END, f'{user_vehicle} is not an authorized vehicle. Please check the spelling and try again.\n')
-        root.after(2000, clear_output)  # Automatically clear log after 2 seconds
+        input_field.delete(0, tk.END)
+        root.after(4000, clear_output)  # Automatically clear log after 4 seconds
+        submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    input_field.insert(0, 'Enter vehicle name...')
-    submit_button = tk.Button(root, text="Submit", command=check_vehicle)
+    time.sleep(1)
+    output_text.insert(tk.END, "Please insert vehicle name")
+    submit_button.config(command=check_vehicle)
     submit_button.pack(pady=10)
 
 def add_authorized_vehicle():
@@ -68,10 +72,11 @@ def add_authorized_vehicle():
         output_text.insert(tk.END, f'{new_vehicle} has been added to the Authorized Vehicle list.\n')
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
+        submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
     input_field.insert(0, 'Enter vehicle name...')
-    submit_button = tk.Button(root, text="Submit", command=add_vehicle)
+    submit_button.config(command=add_vehicle)
     submit_button.pack(pady=10)
 
 def remove_authorized_vehicle():
@@ -91,10 +96,11 @@ def remove_authorized_vehicle():
             output_text.insert(tk.END, f'{vehicle_to_remove} was not found in the list of authorized vehicles.\n')
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
+        submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
     input_field.insert(0, 'Enter vehicle name...')
-    submit_button = tk.Button(root, text="Submit", command=remove_vehicle)
+    submit_button.config(command=remove_vehicle)
     submit_button.pack(pady=10)
 
 def clear_output():
@@ -142,5 +148,8 @@ input_field.pack(pady=10)
 
 output_text = tk.Text(root, height=10, width=50)
 output_text.pack(pady=10)
+
+submit_button = tk.Button(root, text="Submit")
+submit_button.pack_forget()
 
 root.mainloop()
