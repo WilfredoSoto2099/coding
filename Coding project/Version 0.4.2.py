@@ -20,6 +20,7 @@ def load_authorized_vehicles(filename='authorized_vehicles.json', directory=r'C:
     filepath = os.path.join(directory, filename)
     if not os.path.exists(directory):
         os.makedirs(directory)
+    print() # readability
     print(f"Loading from: {filepath}")  # Debugging: Print the file path being loaded
     try:
         with open(filepath, 'r') as file:
@@ -32,7 +33,10 @@ def save_authorized_vehicles(authorized_vehicles, filename='authorized_vehicles.
         os.makedirs(directory)
     authorized_vehicles.sort()  # Sort the list alphabetically before saving
     filepath = os.path.join(directory, filename)
+    print() #readibility
+    print()
     print(f"Saving to: {filepath}")  # Debugging: Print the file path being saved
+    print() #readability
     with open(filepath, 'w') as file:
         json.dump(authorized_vehicles, file, indent=4)
 
