@@ -42,8 +42,8 @@ def clear_output():
 # Show the "Continue" button
 def show_continue_button():
     global continue_button
-    continue_button = tk.Button(root, text="Continue", command=handle_continue)
-    continue_button.pack(pady=10)
+    if not continue_button.winfo_ismapped():
+        continue_button.pack(side=tk.LEFT, padx=5)
 
 # Cancel any ongoing processes, clear the output text area, and remove the "Continue" button
 def handle_continue():
@@ -58,7 +58,7 @@ def handle_continue():
 def wait_for_user_input():
     global continue_button
     if not continue_button.winfo_ismapped():
-            continue_button.pack(pady=10)
+        continue_button.pack(side=tk.LEFT, padx=5)
     root.wait_window(continue_button)
 
 # OPTION 1: Print all authorized vehicles
@@ -94,9 +94,9 @@ def check_authorized_vehicle():
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    input_field.insert(0, 'Enter vehicle name...')
+    output_text.insert(tk.END, 'Please Insert vehicle name...')
     submit_button.config(command=check_vehicle)
-    submit_button.pack(pady=10)
+    submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 3: Add a vehicle to the authorized list
 def add_authorized_vehicle():
@@ -117,9 +117,9 @@ def add_authorized_vehicle():
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    input_field.insert(0, 'Enter vehicle name...')
-    submit_button.config(command=add_vehicle)
-    submit_button.pack(pady=10)
+    output_text.insert(tk.END, 'Please Insert vehicle name you would like to add...')
+
+    submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 4: Remove a vehicle from the authorized list
 def remove_authorized_vehicle():
@@ -143,9 +143,9 @@ def remove_authorized_vehicle():
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    input_field.insert(0, 'Enter vehicle name...')
+    output_text.insert(tk.END, 'Please Insert vehicle name...')
     submit_button.config(command=remove_vehicle)
-    submit_button.pack(pady=10)
+    submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 5: Exit the program
 def exit_program():
@@ -189,5 +189,8 @@ output_text.pack(pady=10)
 
 submit_button = tk.Button(root, text="Submit")
 submit_button.pack_forget()
+
+# Initialize the "Continue" button
+continue_button = tk.Button(root, text="Continue", command=handle_continue)
 
 root.mainloop()
