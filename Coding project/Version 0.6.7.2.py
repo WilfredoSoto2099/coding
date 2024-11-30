@@ -38,18 +38,21 @@ def clear_output():
 
 # Show the "Continue" button
 def show_continue_button():
+    global continue_button
     continue_button = tk.Button(root, text="Continue", command=handle_continue)
     continue_button.pack(pady=10)
 
-# Cancel any ongoing processes and clear the output text area
+# Cancel any ongoing processes, clear the output text area, and remove the "Continue" button
 def handle_continue():
     root.after_cancel(display_vehicles_slowly_after)
     clear_output()
+    continue_button.pack_forget()
 
 # Wait for user input with a "Continue" button
 def wait_for_user_input():
-    continue_button = tk.Button(root, text="Continue", command=lambda: [continue_button.pack_forget(), clear_output()])
-    continue_button.pack(pady=10)
+    global continue_button
+    if not continue_button.winfo_ismapped():
+            continue_button.pack(pady=10)
     root.wait_window(continue_button)
 
 # OPTION 1: Print all authorized vehicles
@@ -59,7 +62,7 @@ def print_authorized_vehicles():
     output_text.insert(tk.END, 'Printing all Authorized Vehicles...\n')
     root.update()
     display_vehicles_slowly(vehicles, 0)
-    root.after(10000, show_continue_button)
+    root.after(1000, show_continue_button)
 
 # OPTION 2: Check if a vehicle is authorized
 def check_authorized_vehicle():
@@ -76,11 +79,12 @@ def check_authorized_vehicle():
         else:
             output_text.insert(tk.END, f'{user_vehicle} is not an authorized vehicle. Please check the spelling and try again.\n')
         input_field.delete(0, tk.END)
-        root.after(4000, clear_output)
+        wait_for_user_input()  # Wait for user input with a "Continue" button
         submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
-    input_field.insert(0, 'Enter vehicle name...')
+    time.sleep(1)
+    output_text.insert(tk.END, 'Please insert vehicle name...')
     submit_button.config(command=check_vehicle)
     submit_button.pack(pady=10)
 
