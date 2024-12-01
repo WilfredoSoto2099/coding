@@ -60,6 +60,7 @@ def wait_for_user_input():
     if not continue_button.winfo_ismapped():
         continue_button.pack(side=tk.LEFT, padx=5)
     root.wait_window(continue_button)
+    submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 1: Print all authorized vehicles
 def print_authorized_vehicles():
@@ -90,13 +91,16 @@ def check_authorized_vehicle():
             output_text.insert(tk.END, 'Please insert vehicle name...\n')
 
         input_field.delete(0, tk.END)
-        wait_for_user_input()  # Wait for user input with a "Continue" button
         submit_button.pack_forget()
+        wait_for_user_input()  # Wait for user input with a "Continue" button
+        
 
     input_field.delete(0, tk.END)
     output_text.insert(tk.END, 'Please Insert vehicle name...')
-    submit_button.config(command=check_vehicle)
+    submit_button.pack_forget()
     submit_button.pack(side=tk.LEFT, padx=5, pady=10)
+    submit_button.config(command=check_vehicle)
+  
 
 # OPTION 3: Add a vehicle to the authorized list
 def add_authorized_vehicle():
@@ -112,13 +116,15 @@ def add_authorized_vehicle():
         save_authorized_vehicles(vehicles)
         output_text.insert(tk.END, f'{new_vehicle} has been added to the Authorized Vehicle list.\n')
         input_field.delete(0, tk.END)
+        submit_button.pack_forget()
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
-        submit_button.pack_forget()
+        
 
     input_field.delete(0, tk.END)
     output_text.insert(tk.END, 'Please Insert vehicle name you would like to add...')
-
+    submit_button.config(command=add_vehicle)
+    submit_button.pack_forget()
     submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 4: Remove a vehicle from the authorized list
@@ -138,13 +144,14 @@ def remove_authorized_vehicle():
         else:
             output_text.insert(tk.END, f'{vehicle_to_remove} was not found in the list of authorized vehicles.\n')
         input_field.delete(0, tk.END)
+        submit_button.pack_forget()
         wait_for_user_input()
         output_text.delete(1.0, tk.END)
-        submit_button.pack_forget()
 
     input_field.delete(0, tk.END)
     output_text.insert(tk.END, 'Please Insert vehicle name...')
     submit_button.config(command=remove_vehicle)
+    submit_button.pack_forget()
     submit_button.pack(side=tk.LEFT, padx=5, pady=10)
 
 # OPTION 5: Exit the program
