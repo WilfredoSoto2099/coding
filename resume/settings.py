@@ -1,3 +1,5 @@
+# settings.py
+
 import pygame
 
 def draw_text(text, font, color, surface, x, y):
@@ -38,3 +40,14 @@ def get_city_input(screen, font):
         draw_text(user_text, font, (0, 0, 0), screen, input_box.x + 5, input_box.y + 5)
         input_box.w = max(200, font.size(user_text)[0] + 10)
         pygame.display.flip()
+
+def save_city(city):
+    with open('city.txt', 'w') as f:
+        f.write(city)
+
+def load_city():
+    try:
+        with open('city.txt', 'r') as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return 'Tokyo'  # Default city
