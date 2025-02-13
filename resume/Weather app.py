@@ -1,6 +1,6 @@
 import pygame
 import requests
-from settings import draw_text, get_city_input
+from settings import draw_text, get_city_input, save_city, load_city
 
 # Initializing pygame
 pygame.init()
@@ -23,18 +23,19 @@ def get_weather(city):
 
 # Main loop
 running = True
-city = 'Tampa'  # Default city
+city = load_city()  # Load the saved city
 font = pygame.font.Font(None, 36)
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_s:
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if settings_button.collidepoint(event.pos):
                 new_city = get_city_input(screen, font)
                 if new_city:
                     city = new_city
+                    save_city(city)
 
     # Screen color
     screen.fill((185, 239, 255))
@@ -49,6 +50,11 @@ while running:
         # Display weather data
         draw_text(f'Temperature: {temperature:.2f}°C', font, (0, 0, 0), screen, 20, 20)
         draw_text(f'Description: {weather_desc}', font, (0, 0, 0), screen, 20, 60)
+
+    # Settings button
+    settings_button = pygame.Rect(20, 150, 140, 32)
+    pygame.draw.rect(screen, (0, 0, 0), settings_button)
+    draw_text('Settings', font, (255, 255, 255), screen, settings_button.x + 5, settings_button.y + 5)
 
     # Display update
     pygame.display.flip()
