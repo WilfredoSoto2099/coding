@@ -1,5 +1,6 @@
 import pygame
 import requests
+from settings import draw_text, get_city_input
 
 # Initializing pygame
 pygame.init()
@@ -22,27 +23,32 @@ def get_weather(city):
 
 # Main loop
 running = True
+city = 'Tampa'  # Default city
+font = pygame.font.Font(None, 36)
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                new_city = get_city_input(screen, font)
+                if new_city:
+                    city = new_city
 
     # Screen color
     screen.fill((185, 239, 255))
 
     # Fetch weather data
-    weather_data = get_weather('Tampa')  # Replace 'Tokyo' with your desired city
+    weather_data = get_weather(city)
     if weather_data['cod'] == 200:
         main = weather_data['main']
         temperature = main['temp'] - 273.15  # Convert from Kelvin to Celsius
         weather_desc = weather_data['weather'][0]['description']
 
         # Display weather data
-        font = pygame.font.Font(None, 36)
-        text = font.render(f'Temperature: {temperature:.2f}°C', True, (0, 0, 0))
-        screen.blit(text, (20, 20))
-        text = font.render(f'Description: {weather_desc}', True, (0, 0, 0))
-        screen.blit(text, (20, 60))
+        draw_text(f'Temperature: {temperature:.2f}°C', font, (0, 0, 0), screen, 20, 20)
+        draw_text(f'Description: {weather_desc}', font, (0, 0, 0), screen, 20, 60)
 
     # Display update
     pygame.display.flip()
