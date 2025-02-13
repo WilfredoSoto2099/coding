@@ -30,11 +30,28 @@ def get_city_from_map(screen, font, map_image):
                 closest = city
         return closest
 
+    dragging = False
+    offset_x = 0
+    offset_y = 0
+
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return None
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if map_rect.collidepoint(event.pos):
+                    dragging = True
+                    mouse_x, mouse_y = event.pos
+                    offset_x = map_rect.x - mouse_x
+                    offset_y = map_rect.y - mouse_y
+            if event.type == pygame.MOUSEBUTTONUP:
+                dragging = False
+            if event.type == pygame.MOUSEMOTION:
+                if dragging:
+                    mouse_x, mouse_y = event.pos
+                    map_rect.x = mouse_x + offset_x
+                    map_rect.y = mouse_y + offset_y
+            if event.type == pygame.MOUSEBUTTONDOWN and not dragging:
                 if map_rect.collidepoint(event.pos):
                     x, y = event.pos
                     return closest_city(x, y)
