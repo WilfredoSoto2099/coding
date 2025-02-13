@@ -2,6 +2,7 @@
 
 import pygame
 import os
+from mapbox import Geocoder
 
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, True, color)
@@ -9,30 +10,20 @@ def draw_text(text, font, color, surface, x, y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
-def get_city_from_map(screen, font, map_image):
+def get_city_from_map(screen, font, map_image, mapbox_api_key):
     map_rect = map_image.get_rect(topleft=(20, 100))
-    cities = {
-        "Tokyo": (139.6917, 35.6895),
-        "New York": (-74.0060, 40.7128),
-        "London": (-0.1276, 51.5074),
-        "Paris": (2.3522, 48.8566),
-        "Sydney": (151.2093, -33.8688),
-        # Add more cities with their approximate coordinates
-    }
-
-    def closest_city(x, y):
-        min_dist = float('inf')
-        closest = None
-        for city, (cx, cy) in cities.items():
-            dist = (cx - x) ** 2 + (cy - y) ** 2
-            if dist < min_dist:
-                min_dist = dist
-                closest = city
-        return closest
-
+    geocoder = Geocoder(access_token=mapbox_api_key)
     dragging = False
     offset_x = 0
     offset_y = 0
+
+    def closest_city(lat, lon):
+        response = geocoder.reverse(lon=lon, lat=lat)
+        if response.status_code == 200:
+            features = response.geojson()['features']
+            if features:
+                return features[0]['place_name']
+        return None
 
     while True:
         for event in pygame.event.get():
@@ -54,7 +45,11 @@ def get_city_from_map(screen, font, map_image):
             if event.type == pygame.MOUSEBUTTONDOWN and not dragging:
                 if map_rect.collidepoint(event.pos):
                     x, y = event.pos
-                    return closest_city(x, y)
+                    lat = (y / screen.get_height()) * 180 - 90
+                    lon = (x / screen.get_width()) * 360 - 180
+                    city = closest_city(lat, lon)
+                    if city:
+                        return city
 
         screen.fill((185, 239, 255))
         screen.blit(map_image, map_rect)

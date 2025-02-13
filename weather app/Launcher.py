@@ -11,7 +11,7 @@ label = tk.Label(root, text='Weather App Installer')
 label.pack(pady=20)
 
 # List of packages to install
-packages = ['pygame', 'requests']
+packages = ['pygame', 'requests', 'mapbox']
 
 # Create a progress bar
 progress = ttk.Progressbar(root, orient='horizontal', length=300, mode='determinate')
@@ -25,9 +25,9 @@ def install_and_run(packages):
         progress['value'] = i
         root.update_idletasks()  # Update the progress bar
     # Path to your Weather app script
-    script_path = 'path/to/Weather app.py'
+    script_path = 'weather_app.py'  # Ensure this path is correct
     subprocess.run(['python', script_path])
-    root.destroy #closes the window
+    root.destroy()  # Closes the window
 
 # Button to start the installation and run the script
 install_button = tk.Button(root, text='Install Packages', command=lambda: install_and_run(packages))

@@ -18,6 +18,9 @@ pygame.display.set_caption('Weather app')
 map_image_path = os.path.join(os.path.dirname(__file__), 'world_map.png')
 map_image = pygame.image.load(map_image_path)
 
+# Mapbox API key
+mapbox_api_key = 'your_mapbox_api_key'  # Replace with your Mapbox API key
+
 # Function to get weather data
 def get_weather(city):
     api_key = 'a6dd418f293f9e59f07ea0701cc7ac5d'  # Your OpenWeatherMap API key
@@ -37,7 +40,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if settings_button.collidepoint(event.pos):
-                new_city = get_city_from_map(screen, font, map_image)
+                new_city = get_city_from_map(screen, font, map_image, mapbox_api_key)
                 if new_city:
                     city = new_city
                     save_city(city)
