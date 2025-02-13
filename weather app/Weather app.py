@@ -1,4 +1,5 @@
 import pygame
+import os
 import requests
 from settings import draw_text, get_city_from_map, save_city, load_city
 
@@ -14,7 +15,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Weather app')
 
 # Load world map image
-map_image = pygame.image.load('world_map.png')
+map_image_path = os.path.join(os.path.dirname(__file__), 'world_map.png')
+map_image = pygame.image.load(map_image_path)
 
 # Function to get weather data
 def get_weather(city):
