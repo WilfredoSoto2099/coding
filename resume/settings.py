@@ -1,6 +1,7 @@
 # settings.py
 
 import pygame
+import os
 
 def draw_text(text, font, color, surface, x, y):
     textobj = font.render(text, True, color)
@@ -42,12 +43,16 @@ def get_city_input(screen, font):
         pygame.display.flip()
 
 def save_city(city):
-    with open('city.txt', 'w') as f:
-        f.write(city)
+    settings_dir = os.path.dirname(__file__)
+    city_file_path = os.path.join(settings_dir, 'city.txt')
+    with open(city_file_path, 'wb') as f:
+        f.write(city.encode('utf-8'))
 
 def load_city():
+    settings_dir = os.path.dirname(__file__)
+    city_file_path = os.path.join(settings_dir, 'city.txt')
     try:
-        with open('city.txt', 'r') as f:
-            return f.read().strip()
+        with open(city_file_path, 'rb') as f:
+            return f.read().decode('utf-8').strip()
     except FileNotFoundError:
         return 'Tokyo'  # Default city
