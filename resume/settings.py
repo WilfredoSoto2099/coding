@@ -9,37 +9,39 @@ def draw_text(text, font, color, surface, x, y):
     textrect.topleft = (x, y)
     surface.blit(textobj, textrect)
 
-def get_city_input(screen, font):
-    input_active = False
-    user_text = ''
-    input_box = pygame.Rect(20, 100, 140, 32)
-    color_active = pygame.Color('lightskyblue3')
-    color_inactive = pygame.Color('gray15')
-    color = color_inactive
+def get_city_from_map(screen, font, map_image):
+    map_rect = map_image.get_rect(topleft=(20, 100))
+    cities = {
+        "Tokyo": (139.6917, 35.6895),
+        "New York": (-74.0060, 40.7128),
+        "London": (-0.1276, 51.5074),
+        "Paris": (2.3522, 48.8566),
+        "Sydney": (151.2093, -33.8688),
+        # Add more cities with their approximate coordinates
+    }
+
+    def closest_city(x, y):
+        min_dist = float('inf')
+        closest = None
+        for city, (cx, cy) in cities.items():
+            dist = (cx - x) ** 2 + (cy - y) ** 2
+            if dist < min_dist:
+                min_dist = dist
+                closest = city
+        return closest
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return None
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if input_box.collidepoint(event.pos):
-                    input_active = True
-                else:
-                    input_active = False
-            if event.type == pygame.KEYDOWN:
-                if input_active:
-                    if event.key == pygame.K_RETURN:
-                        return user_text
-                    elif event.key == pygame.K_BACKSPACE:
-                        user_text = user_text[:-1]
-                    else:
-                        user_text += event.unicode
+                if map_rect.collidepoint(event.pos):
+                    x, y = event.pos
+                    return closest_city(x, y)
 
         screen.fill((185, 239, 255))
-        color = color_active if input_active else color_inactive
-        pygame.draw.rect(screen, color, input_box, 2)
-        draw_text(user_text, font, (0, 0, 0), screen, input_box.x + 5, input_box.y + 5)
-        input_box.w = max(200, font.size(user_text)[0] + 10)
+        screen.blit(map_image, map_rect)
+        draw_text("Click on the map to select a city", font, (0, 0, 0), screen, 20, 20)
         pygame.display.flip()
 
 def save_city(city):

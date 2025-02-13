@@ -1,6 +1,6 @@
 import pygame
 import requests
-from settings import draw_text, get_city_input, save_city, load_city
+from settings import draw_text, get_city_from_map, save_city, load_city
 
 # Initializing pygame
 pygame.init()
@@ -12,6 +12,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Window title
 pygame.display.set_caption('Weather app')
+
+# Load world map image
+map_image = pygame.image.load('world_map.png')
 
 # Function to get weather data
 def get_weather(city):
@@ -32,7 +35,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if settings_button.collidepoint(event.pos):
-                new_city = get_city_input(screen, font)
+                new_city = get_city_from_map(screen, font, map_image)
                 if new_city:
                     city = new_city
                     save_city(city)
