@@ -1,7 +1,8 @@
 import pygame
 import os
 import requests
-from settings import draw_text, get_city_from_map, save_city, load_city
+import pygame_menu
+from settings import save_city, load_city, get_states_and_cities
 
 # Initializing pygame
 pygame.init()
@@ -14,25 +15,50 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # Window title
 pygame.display.set_caption('Weather app')
 
-# Load world map image
-map_image_path = os.path.join(os.path.dirname(__file__), 'world_map.png')
-map_image = pygame.image.load(map_image_path)
-
-# Mapbox API key
-mapbox_api_key = 'your_mapbox_api_key'  # Replace with your Mapbox API key
-
 # Function to get weather data
 def get_weather(city):
-    api_key = 'a6dd418f293f9e59f07ea0701cc7ac5d'  # Your OpenWeatherMap API key
+    api_key = 'your_openweathermap_api_key'  # Replace with your OpenWeatherMap API key
     base_url = 'http://api.openweathermap.org/data/2.5/weather?'
     complete_url = base_url + 'q=' + city + '&appid=' + api_key
     response = requests.get(complete_url)
     return response.json()
 
+# Function to draw text on the screen
+def draw_text(text, font, color, surface, x, y):
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect()
+    textrect.topleft = (x, y)
+    surface.blit(textobj, textrect)
+
 # Main loop
 running = True
 city = load_city()  # Load the saved city
 font = pygame.font.Font(None, 36)
+
+# Create the settings menu
+menu = pygame_menu.Menu('Settings', screen_width, screen_height, theme=pygame_menu.themes.THEME_BLUE)
+states_and_cities = get_states_and_cities()
+
+selected_state = None
+selected_city = None
+
+def set_state(value, state):
+    global selected_state
+    selected_state = state
+    print(f"Selected state: {state}")
+    city_selector.update([(city, city) for city in states_and_cities[state]])
+
+def set_city(value, city):
+    global selected_city
+    selected_city = city
+    print(f"Selected city: {city}")
+    save_city(city)
+
+state_selector = menu.add.dropselect('Select State: ', [(state, state) for state in states_and_cities.keys()], onchange=set_state)
+city_selector = menu.add.dropselect('Select City: ', [(city, city) for city in states_and_cities['Alabama']], onchange=set_city)
+
+# Define the settings button
+settings_button = pygame.Rect(20, 150, 140, 32)
 
 while running:
     for event in pygame.event.get():
@@ -40,10 +66,7 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if settings_button.collidepoint(event.pos):
-                new_city = get_city_from_map(screen, font, map_image, mapbox_api_key)
-                if new_city:
-                    city = new_city
-                    save_city(city)
+                menu.mainloop(screen)
 
     # Screen color
     screen.fill((185, 239, 255))
@@ -60,7 +83,6 @@ while running:
         draw_text(f'Description: {weather_desc}', font, (0, 0, 0), screen, 20, 60)
 
     # Settings button
-    settings_button = pygame.Rect(20, 150, 140, 32)
     pygame.draw.rect(screen, (0, 0, 0), settings_button)
     draw_text('Settings', font, (255, 255, 255), screen, settings_button.x + 5, settings_button.y + 5)
 

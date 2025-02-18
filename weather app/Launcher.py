@@ -11,7 +11,7 @@ label = tk.Label(root, text='Weather App Installer')
 label.pack(pady=20)
 
 # List of packages to install
-packages = ['pygame', 'requests', 'mapbox']
+packages = ['pygame', 'requests', 'mapbox', 'pygame_menu']
 
 # Create a progress bar
 progress = ttk.Progressbar(root, orient='horizontal', length=300, mode='determinate')

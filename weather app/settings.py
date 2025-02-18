@@ -1,60 +1,4 @@
-# settings.py
-
-import pygame
 import os
-from mapbox import Geocoder
-
-def draw_text(text, font, color, surface, x, y):
-    textobj = font.render(text, True, color)
-    textrect = textobj.get_rect()
-    textrect.topleft = (x, y)
-    surface.blit(textobj, textrect)
-
-def get_city_from_map(screen, font, map_image, mapbox_api_key):
-    map_rect = map_image.get_rect(topleft=(20, 100))
-    geocoder = Geocoder(access_token=mapbox_api_key)
-    dragging = False
-    offset_x = 0
-    offset_y = 0
-
-    def closest_city(lat, lon):
-        response = geocoder.reverse(lon=lon, lat=lat)
-        if response.status_code == 200:
-            features = response.geojson()['features']
-            if features:
-                return features[0]['place_name']
-        return None
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return None
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if map_rect.collidepoint(event.pos):
-                    dragging = True
-                    mouse_x, mouse_y = event.pos
-                    offset_x = map_rect.x - mouse_x
-                    offset_y = map_rect.y - mouse_y
-            if event.type == pygame.MOUSEBUTTONUP:
-                dragging = False
-            if event.type == pygame.MOUSEMOTION:
-                if dragging:
-                    mouse_x, mouse_y = event.pos
-                    map_rect.x = mouse_x + offset_x
-                    map_rect.y = mouse_y + offset_y
-            if event.type == pygame.MOUSEBUTTONDOWN and not dragging:
-                if map_rect.collidepoint(event.pos):
-                    x, y = event.pos
-                    lat = (y / screen.get_height()) * 180 - 90
-                    lon = (x / screen.get_width()) * 360 - 180
-                    city = closest_city(lat, lon)
-                    if city:
-                        return city
-
-        screen.fill((185, 239, 255))
-        screen.blit(map_image, map_rect)
-        draw_text("Click on the map to select a city", font, (0, 0, 0), screen, 20, 20)
-        pygame.display.flip()
 
 def save_city(city):
     settings_dir = os.path.dirname(__file__)
@@ -69,4 +13,51 @@ def load_city():
         with open(city_file_path, 'rb') as f:
             return f.read().decode('utf-8').strip()
     except FileNotFoundError:
-        return 'Tokyo'  # Default city
+        return 'New York'  # Default city
+
+def get_states_and_cities():
+    return {
+        'Alabama': ['Birmingham', 'Montgomery', 'Mobile', 'Huntsville', 'Tuscaloosa'],
+        'Alaska': ['Anchorage', 'Fairbanks', 'Juneau', 'Sitka', 'Ketchikan'],
+        'Arizona': ['Phoenix', 'Tucson', 'Mesa', 'Chandler', 'Scottsdale'],
+        'Arkansas': ['Little Rock', 'Fort Smith', 'Fayetteville', 'Springdale', 'Jonesboro'],
+        'California': ['Los Angeles', 'San Diego', 'San Jose', 'San Francisco', 'Fresno'],
+        'Colorado': ['Denver', 'Colorado Springs', 'Aurora', 'Fort Collins', 'Lakewood'],
+        'Connecticut': ['Bridgeport', 'New Haven', 'Stamford', 'Hartford', 'Waterbury'],
+        'Delaware': ['Wilmington', 'Dover', 'Newark', 'Middletown', 'Smyrna'],
+        'Florida': ['Jacksonville', 'Miami', 'Tampa', 'Orlando', 'St. Petersburg'],
+        'Georgia': ['Atlanta', 'Augusta', 'Columbus', 'Savannah', 'Athens'],
+        'Hawaii': ['Honolulu', 'Hilo', 'Kailua', 'Kapolei', 'Kaneohe'],
+        'Idaho': ['Boise', 'Meridian', 'Nampa', 'Idaho Falls', 'Pocatello'],
+        'Illinois': ['Chicago', 'Aurora', 'Naperville', 'Joliet', 'Rockford'],
+        'Indiana': ['Indianapolis', 'Fort Wayne', 'Evansville', 'South Bend', 'Carmel'],
+        'Iowa': ['Des Moines', 'Cedar Rapids', 'Davenport', 'Sioux City', 'Iowa City'],
+        'Kansas': ['Wichita', 'Overland Park', 'Kansas City', 'Topeka', 'Olathe'],
+        'Kentucky': ['Louisville', 'Lexington', 'Bowling Green', 'Owensboro', 'Covington'],
+        'Louisiana': ['New Orleans', 'Baton Rouge', 'Shreveport', 'Lafayette', 'Lake Charles'],
+        'Maine': ['Portland', 'Lewiston', 'Bangor', 'South Portland', 'Auburn'],
+        'Maryland': ['Baltimore', 'Frederick', 'Rockville', 'Gaithersburg', 'Bowie'],
+        'Massachusetts': ['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge'],
+        'Michigan': ['Detroit', 'Grand Rapids', 'Warren', 'Sterling Heights', 'Ann Arbor'],
+        'Minnesota': ['Minneapolis', 'Saint Paul', 'Rochester', 'Duluth', 'Bloomington'],
+        'Mississippi': ['Jackson', 'Gulfport', 'Southaven', 'Biloxi', 'Hattiesburg'],
+        'Missouri': ['Kansas City', 'Saint Louis', 'Springfield', 'Columbia', 'Independence'],
+        'Montana': ['Billings', 'Missoula', 'Great Falls', 'Bozeman', 'Butte'],
+        'Nebraska': ['Omaha', 'Lincoln', 'Bellevue', 'Grand Island', 'Kearney'],
+        'Nevada': ['Las Vegas', 'Henderson', 'Reno', 'North Las Vegas', 'Sparks'],
+        'New Hampshire': ['Manchester', 'Nashua', 'Concord', 'Derry', 'Dover'],
+        'New Jersey': ['Newark', 'Jersey City', 'Paterson', 'Elizabeth', 'Edison'],
+        'New Mexico': ['Albuquerque', 'Las Cruces', 'Rio Rancho', 'Santa Fe', 'Roswell'],
+        'New York': ['New York City', 'Buffalo', 'Rochester', 'Yonkers', 'Syracuse'],
+        'North Carolina': ['Charlotte', 'Raleigh', 'Greensboro', 'Durham', 'Winston-Salem'],
+        'North Dakota': ['Fargo', 'Bismarck', 'Grand Forks', 'Minot', 'West Fargo'],
+        'Ohio': ['Columbus', 'Cleveland', 'Cincinnati', 'Toledo', 'Akron'],
+        'Oklahoma': ['Oklahoma City', 'Tulsa', 'Norman', 'Broken Arrow', 'Lawton'],
+        'Oregon': ['Portland', 'Salem', 'Eugene', 'Gresham', 'Hillsboro'],
+        'Pennsylvania': ['Philadelphia', 'Pittsburgh', 'Allentown', 'Erie', 'Reading'],
+        'Rhode Island': ['Providence', 'Warwick', 'Cranston', 'Pawtucket', 'East Providence'],
+        'South Carolina': ['Charleston', 'Columbia', 'North Charleston', 'Mount Pleasant', 'Rock Hill'],
+        'South Dakota': ['Sioux Falls', 'Rapid City', 'Aberdeen', 'Brookings', 'Watertown'],
+        'Tennessee': ['Nashville', 'Memphis', 'Knoxville', 'Chattanooga', 'Clarksville'],
+        'Texas': ['Houston', 'San Antonio', 'Dallas']
+    }
